@@ -191,6 +191,13 @@ public class ThetaSketchTest {
         actual = actuals.get(0);
         Assert.assertEquals(actual, expected);
 
+        sketch.union(anotherSketch.serialize());
+        actuals = sketch.getResult(null, null).getRecords();
+        Assert.assertEquals(actuals.size(), 1);
+        expected = RecordBox.get().add(ThetaSketch.COUNT_FIELD, 46.0).getRecord();
+        actual = actuals.get(0);
+        Assert.assertEquals(actual, expected);
+
         // Do it again and make sure getResult is idempotent if new data was not added
         actuals = sketch.getResult(null, null).getRecords();
         Assert.assertEquals(actuals.size(), 1);

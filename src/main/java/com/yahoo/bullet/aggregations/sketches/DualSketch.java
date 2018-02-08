@@ -62,17 +62,17 @@ public abstract class DualSketch extends Sketch {
     }
 
     /**
-     * Collect both the update sketch and the union sketch into the result.
+     * Merge and reset both the update sketch and the union sketch into the result.
      */
     protected abstract void mergeBothSketches();
 
     /**
-     * Merge just the update sketch into the result.
+     * Merge and reset just the update sketch into the result.
      */
     protected abstract void mergeUpdateSketch();
 
     /**
-     * Merge just the union sketch into the result.
+     * Merge and reset just the union sketch into the result.
      */
     protected abstract void mergeUnionSketch();
 
@@ -86,13 +86,14 @@ public abstract class DualSketch extends Sketch {
     /**
      * {@inheritDoc}
      *
-     * Call this after your reset operations to reset the metadata relating to storing two sketches.
+     * Call this after your reset operations to reset the metadata relating to storing two sketches. You should
+     * reset or remove all your sketches here.
      */
     @Override
     public void reset() {
         updated = false;
         unioned = false;
-        // If reset, must merge again since old merged result is to be thrown away and recreated.
+        // If reset, must merge again since old merged result is thrown away and recreated.
         mustMerge = true;
     }
 }
