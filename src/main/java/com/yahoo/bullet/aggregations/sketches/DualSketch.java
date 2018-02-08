@@ -37,6 +37,7 @@ public abstract class DualSketch extends Sketch {
      * This method must be called before getting any kind of data out of the sketch. This calls the appropriate driver
      * methods to tell a subclass whether it needs to merge its two sketches ({@link #mergeBothSketches()},
      * or merge its union sketch ({@link #mergeUnionSketch()} or just the update sketch ({@link #mergeUpdateSketch()}.
+     * It will also ask to add any existing merged results back into the union sketch ({@link #unionedExistingResults()}). _
      *
      * This method is idempotent and will not recollect till a data changing operation has been performed, such as an
      * update, union or a reset. This is why you must call the appropriate methods ({@link #update()}, {@link #union()},
@@ -46,7 +47,8 @@ public abstract class DualSketch extends Sketch {
         if (!mustMerge) {
             return;
         }
-        if (unionExistingResults()) {
+        if (unionedExistingResults()) {
+            // Force unioned to be true so that the union sketch with the result is merged
             unioned = true;
         }
         if (unioned && updated) {
@@ -79,7 +81,7 @@ public abstract class DualSketch extends Sketch {
      *
      * @return A boolean denoting whether the union was done.
      */
-    protected abstract boolean unionExistingResults();
+    protected abstract boolean unionedExistingResults();
 
     /**
      * {@inheritDoc}
@@ -90,6 +92,7 @@ public abstract class DualSketch extends Sketch {
     public void reset() {
         updated = false;
         unioned = false;
+        // If reset, must merge again since old merged result is to be thrown away and recreated.
         mustMerge = true;
     }
 }

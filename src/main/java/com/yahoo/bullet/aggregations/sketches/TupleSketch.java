@@ -126,7 +126,7 @@ public class TupleSketch extends KMVSketch {
     }
 
     @Override
-    protected boolean unionExistingResults() {
+    protected boolean unionedExistingResults() {
         unionSketch.update(result);
         return result != null;
     }
